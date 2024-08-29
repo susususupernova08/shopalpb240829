@@ -33,7 +33,10 @@ public class Delivery {
     public void onPostPersist() {
         DeliveryStarted deliveryStarted = new DeliveryStarted(this);
         deliveryStarted.publishAfterCommit();
+    }
 
+    @PreRemove
+    public void onPreRemove() {
         DeliveryCancelled deliveryCancelled = new DeliveryCancelled(this);
         deliveryCancelled.publishAfterCommit();
     }
@@ -45,53 +48,21 @@ public class Delivery {
         return deliveryRepository;
     }
 
-    //<<< Clean Arch / Port Method
     public static void startDelivery(OrderPlaced orderPlaced) {
         //implement business logic here:
 
-        /** Example 1:  new item 
         Delivery delivery = new Delivery();
+        delivery.setOrderId(orderPlaced.getId());
+        delivery.setProductId(orderPlaced.getProductId());
+        delivery.setQty(orderPlaced.getQty());
+        delivery.setAddress(orderPlaced.getAddress());
+        delivery.setStatus("DELIVERY_READY");
         repository().save(delivery);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderPlaced.get???()).ifPresent(delivery->{
-            
-            delivery // do something
-            repository().save(delivery);
-
-
-         });
-        */
-
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
     public static void cancelDelivery(OrderCancelled orderCancelled) {
-        //implement business logic here:
 
-        /** Example 1:  new item 
-        Delivery delivery = new Delivery();
-        repository().save(delivery);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderCancelled.get???()).ifPresent(delivery->{
-            
-            delivery // do something
-            repository().save(delivery);
-
-
-         });
-        */
+        repository().deleteByOrderId(orderCancelled.getId());
 
     }
-    //>>> Clean Arch / Port Method
-
-}
-//>>> DDD / Aggregate Root
+}    

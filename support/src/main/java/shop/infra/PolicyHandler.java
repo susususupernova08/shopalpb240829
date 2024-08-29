@@ -42,21 +42,6 @@ public class PolicyHandler {
         Delivery.startDelivery(event);
     }
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='DeliveryStarted'"
-    )
-    public void wheneverDeliveryStarted_DecreaseInventory(
-        @Payload DeliveryStarted deliveryStarted
-    ) {
-        DeliveryStarted event = deliveryStarted;
-        System.out.println(
-            "\n\n##### listener DecreaseInventory : " + deliveryStarted + "\n\n"
-        );
-
-        // Sample Logic //
-        Inventory.decreaseInventory(event);
-    }
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
